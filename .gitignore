@@ -1,0 +1,15 @@
+# python cache
+__pycache__/
+*.pyc
+
+# data
+archive/
+datasets/
+estimator/
+eval_results/
+gifs/
+gym_Missile/
+outputs/
+trained_models/
+trajectories/
+wandb/

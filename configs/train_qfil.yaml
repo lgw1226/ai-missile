@@ -1,0 +1,32 @@
+gpu_index: 0
+sim_index: 0
+
+num_dagger_updates: 400000
+num_dagger_rollouts: 10
+num_dagger_steps: 2000
+
+num_qfil_updates: 200000
+qfil_quantile: 0.75
+
+batch_size: 200
+n_eval: 10
+eval_freq: 10000
+log_freq: 100
+
+environment:
+  env_type: kinematics
+  env_dim: 3
+  obs_type: vector
+  ctrl_gain: 5
+  ctrl_gain_amp: 2
+  beta_decay: 0.95
+
+agent:
+  buffer_size: 200000
+  lr: 0.0003
+
+wandb:
+  project: ai-missile
+  name: 3d-kinematics-vector-qfil
+  group:
+  mode: online
