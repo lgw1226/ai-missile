@@ -1,32 +1,60 @@
+seed: 0
 gpu_index: 0
 sim_index: 0
 
-num_dagger_updates: 400000
-num_dagger_rollouts: 10
-num_dagger_steps: 2000
+logging:
+  log_freq: 100
+  save_dir: trained_models/qfil
+  wandb_project: ai-missile
+  wandb_name: debug
+  wandb_mode: disabled
 
-num_qfil_updates: 200000
-qfil_quantile: 0.75
+training:
+  beta_decay: 0.95
+  dagger_batch_size: 256
+  num_dagger_epochs: 100
+  num_dagger_samples: 1000  # per epoch
+  num_dagger_updates: 1000  # per epoch
+  num_qfil_epochs: 100
+  num_qfil_updates: 1000  # per epoch
+  qfil_batch_size: 1024
 
-batch_size: 200
-n_eval: 10
-eval_freq: 10000
-log_freq: 100
+env:
+  type: kinematics
+  obs_type: point-ir
+  dim: 2
+  max_episode_length: 2000
+  missile_speed: 1000
+  target_speed: 500
 
-environment:
-  env_type: kinematics
-  env_dim: 3
-  obs_type: vector
+expert:
   ctrl_gain: 5
   ctrl_gain_amp: 2
-  beta_decay: 0.95
 
 agent:
-  buffer_size: 200000
-  lr: 0.0003
+  builder:
+    _target_: agents.qfil.ImageVectorQFIL
+    gamma: 0.99
+    quantile: 0.75
+    num_pushforward_samples: 50
+    num_critic_updates: 2
+    tau: 0.005
+    actor_cfg: ${agent.actor}
+    actor_optim_cfg: ${agent.actor_optim}
+    critic_cfg: ${agent.critic}
+    critic_optim_cfg: ${agent.critic_optim}
+  actor:
+    _target_: components.actors.DeterministicImageVectorActor
+  actor_optim:
+    _target_: torch.optim.Adam
+    lr: 0.0001
+  critic:
+    _target_: components.critics.ImageVectorCritic
+  critic_optim:
+    _target_: torch.optim.Adam
+    lr: 0.0001
 
-wandb:
-  project: ai-missile
-  name: 3d-kinematics-vector-qfil
-  group:
-  mode: online
+buffer:
+  _target_: components.buffers.QFILImageVectorReplayBuffer
+  capacity: 1000000
+  seed: ${seed}

@@ -8,8 +8,12 @@ datasets/
 estimator/
 eval_results/
 gifs/
-gym_Missile/
 outputs/
 trained_models/
 trajectories/
 wandb/
+gym_Missile/render/binary_file/
+gym_Missile/render/Missile_MMF_Gen/
+gym_Missile/render/missile-lin/
+gym_Missile/render/missile-win/
+gym_Missile/save_model/
